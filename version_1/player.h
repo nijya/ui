@@ -15,6 +15,10 @@
 #include <QImageReader>
 #include <QLabel>
 
+#include <iostream>
+
+using namespace std;
+
 class Player : public QWidget
 {
 Q_OBJECT
@@ -41,6 +45,8 @@ public:
     }
 
 private:
+    QWidget *theMenuWidget;
+
     QMap<QString, QIcon> *icons;
 
     QVBoxLayout *theWindowLayout;
@@ -63,6 +69,8 @@ private:
     QPushButton *thePlayOrPauseButton;
     QPushButton *theForwardButton;
     QPushButton *theStopButon;
+
+    QPushButton *theMenuButton;
 
     double currentSpeed;
     QPushButton *theSpeedButton;
@@ -148,6 +156,9 @@ private:
     {
         readIcons("/Users/zhangzihan/Desktop/player/icon");
 
+        theMenuButton = new QPushButton();
+        addButton(theMenuButton, &icons->find("menu").value());
+
         theBackwardButton = new QPushButton();
         addButton(theBackwardButton, &icons->find("backward").value());
 
@@ -222,6 +233,8 @@ private:
         connect(theLoopButon, SIGNAL(clicked()), this, SLOT(setLoop()));
         connect(theVolumeSlider, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
         connect(theVolumeButton, SIGNAL(clicked()), this, SLOT(mute()));
+
+        connect(theMenuButton, SIGNAL(clicked()), this, SLOT(toMenu()));
 
         connect(thePlayer, &QMediaPlayer::durationChanged, theProcessBar, &QSlider::setMaximum);
         connect(thePlayer, &QMediaPlayer::positionChanged, theProcessBar, &QSlider::setValue);
@@ -379,6 +392,15 @@ private slots:
             listHidden = true;
             theListWidget->setVisible(false);
         }
+    }
+
+    void toMenu()
+    {
+        thePlayerWidget->hide();
+        theListWidget->hide();
+//        theMenuWidget->setAttribute(Qt::WA_StyledBackground,true);
+//        theMenuWidget->setStyleSheet("background-color: rgb(255,255, 255)");
+//        theMenuWidget->show();
     }
 };
 
